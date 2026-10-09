@@ -159,7 +159,14 @@ def remove_paths(
     :param delete_sink_node: (boolean) True->We remove the last node of a path
     :return: (nx.DiGraph) A directed graph object
     """
-    pass
+    for path in path_list:
+        nodes_to_remove = list(path)
+        if not delete_entry_node:
+            nodes_to_remove = nodes_to_remove[1:]  
+        if not delete_sink_node:
+            nodes_to_remove = nodes_to_remove[:-1] 
+        graph.remove_nodes_from(nodes_to_remove)
+    return graph
 
 
 def select_best_path(
@@ -180,7 +187,15 @@ def select_best_path(
     :param delete_sink_node: (boolean) True->We remove the last node of a path
     :return: (nx.DiGraph) A directed graph object
     """
-    pass
+    if statistics.stdev(weight_avg_list) > 0:
+        best_index = weight_avg_list.index(max(weight_avg_list))
+    elif statistics.stdev(path_length) > 0:
+        best_index = path_length.index(max(path_length))
+    else:
+        best_index = randint(0, len(path_list) - 1)
+    paths_to_remove = path_list[:best_index] + path_list[best_index + 1 :]
+    return remove_paths(graph, paths_to_remove, delete_entry_node, delete_sink_node)
+ 
 
 
 def path_average_weight(graph: DiGraph, path: List[str]) -> float:
@@ -203,7 +218,7 @@ def solve_bubble(graph: DiGraph, ancestor_node: str, descendant_node: str) -> Di
     :param descendant_node: (str) A downstream node in the graph
     :return: (nx.DiGraph) A directed graph object
     """
-    pass
+
 
 
 def simplify_bubbles(graph: DiGraph) -> DiGraph:
