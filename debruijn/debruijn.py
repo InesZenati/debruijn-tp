@@ -266,7 +266,6 @@ def solve_entry_tips(graph: DiGraph, starting_nodes: List[str]) -> DiGraph:
     """
     for node in graph.nodes:
         if len(list(graph.predecessors(node))) > 1:
-            # Chemins reliant les nœuds d'entrée à ce nœud
             paths = []
             for start in starting_nodes:
                 if has_path(graph, start, node):
@@ -411,13 +410,18 @@ def main() -> None:  # pragma: no cover
     graph = solve_entry_tips(graph, get_starting_nodes(graph))
     graph = solve_out_tips(graph, get_sink_nodes(graph))
  
+    # Écriture des contigs
+    starting_nodes = get_starting_nodes(graph)
+    sink_nodes = get_sink_nodes(graph)
+    contigs = get_contigs(graph, starting_nodes, sink_nodes)
+    save_contigs(contigs, args.output_file)
 
     # Fonctions de dessin du graphe
     # A decommenter si vous souhaitez visualiser un petit
     # graphe
     # Plot the graph
-    # if args.graphimg_file:
-        # draw_graph(graph, args.graphimg_file)
+    if args.graphimg_file:
+         draw_graph(graph, args.graphimg_file)
 
 
 if __name__ == "__main__":  # pragma: no cover
